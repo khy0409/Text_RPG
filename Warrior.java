@@ -29,6 +29,16 @@ public class Warrior extends Player2ndLevel {
 	}
 
 	@Override
-	void skill(Creature[] target) {
+	void buffSkill(Creature target) {
+		boolean typeHit = TypeCheck(this.type, target.type);
+		this.mp -= skillMp;
+		
+		if(typeHit)
+			decreaseHpTypeHitBySkill(target, 1.7);
+		else
+			decreaseHpBySkill(target, 1.7);
+		
+		String hitInfo = typeHit ? "& [Type Hit!] " : "";
+		System.out.println("[BUFF!] "+hitInfo + "전사 " + this.name + " 유저가 몬스터를 칼로 공격합니다");
 	}
 }

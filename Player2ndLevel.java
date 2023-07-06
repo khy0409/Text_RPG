@@ -9,7 +9,7 @@ public abstract class Player2ndLevel extends Player{
 	}
 	
 	abstract void skill(Creature target);
-	abstract void skill(Creature[] target);
+	abstract void buffSkill(Creature target);
 	
 	void healAll(Creature[] party) {
 		for (int i = 0; i < party.length; i++) {

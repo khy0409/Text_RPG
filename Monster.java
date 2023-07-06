@@ -3,7 +3,7 @@ package TEXT_RPG;
 public class Monster extends Creature{
 	Monster() {
 		this.str = 10;
-		this.hp = 150;
+		this.hp = 170;
 	}
 
 	void attackAll(Creature[] targetArr) {

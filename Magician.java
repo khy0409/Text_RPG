@@ -28,6 +28,17 @@ public class Magician extends Player2ndLevel {
 	}
 
 	@Override
-	void skill(Creature[] target) {
+	void buffSkill(Creature target) {
+		boolean typeHit = TypeCheck(this.type, target.type);
+		this.mp -= skillMp;
+		
+		if(typeHit)
+			decreaseHpTypeHitBySkill(target, 2.0);
+		else
+			decreaseHpBySkill(target, 2.0);
+
+		String hitInfo = typeHit ? "& [Type Hit!] " : "";
+		System.out.println("[BUFF!] "+hitInfo + "마법사 " + this.name + " 유저가 몬스터를 마법으로 공격합니다");
 	}
+
 }
