@@ -40,9 +40,25 @@ public abstract class Creature implements Attack_Healable, TypeAttack_Healable {
 		}
 	}
 	
+	void BuffDecreaseHp(Creature target) { //일반 타입일때 공격할 메서드
+		if (target.hp >= (this.str*1.5)) { //target.hp가 나의 공격력보다 높다면
+			target.hp -= (this.str*1.5); //target.hp - myStr;
+		} else { 				//target.hp가 나의 공격력보다 낮다면
+			target.hp = 0; 		//target.hp = 0;
+		}
+	}
+	
 	void DecreaseHpTypeHit(Creature target) { //우세 타입일 때 공격할 메서드
 		if(target.hp >= (int)(this.str * 1.5)) { //target.hp가 나의 공격력*1.5보다 높다면
 			target.hp -= (int)(this.str * 1.5);
+		} else {
+			target.hp = 0;
+		}
+	}
+	
+	void BuffDecreaseHpTypeHit(Creature target) { //우세 타입일 때 공격할 메서드
+		if(target.hp >= (int)(this.str * 1.5*1.5)) { //target.hp가 나의 공격력*1.5보다 높다면
+			target.hp -= (int)(this.str * 1.5*1.5);
 		} else {
 			target.hp = 0;
 		}

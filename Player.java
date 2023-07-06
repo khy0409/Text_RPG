@@ -25,13 +25,12 @@ public class Player extends Creature{
 
 	@Override
 	public void healType(Creature target) {
-		boolean typeHit = TypeCheck(this.type, target.type);
-		if (typeHit)
+		boolean typeHitHealer = TypeCheck(this.type, this.type);
+		if (typeHitHealer)
 			HealHpTypeHit(target);
 		else
 			HealHp(target);
-
-		String hitInfo = typeHit ? "[TYPE MATCH!] " : "";
+		String hitInfo = typeHitHealer ? "[TYPE MATCH!] " : "";
 		System.out.println(hitInfo + this.name + " 유저가 회복합니다");
 	}
 	
@@ -55,7 +54,18 @@ public class Player extends Creature{
 			DecreaseHp(target);
 
 		String hitInfo = typeHit ? "[TYPE HIT!] " : "";
-		System.out.println(hitInfo + this.name + "유저가 몬스터를 공격합니다");
+		System.out.println(hitInfo + this.name + " 유저가 몬스터를 공격합니다");
+	}
+	
+	public void BuffAttackType(Creature target) {
+		boolean typeHit = TypeCheck(this.type, target.type);
+		if (typeHit)
+			BuffDecreaseHpTypeHit(target);
+		else
+			BuffDecreaseHp(target);
+
+		String hitInfo = typeHit ? "& [TYPE HIT!] " : "";
+		System.out.println("[BUFF] "+hitInfo + this.name + " 유저가 몬스터를 공격합니다");
 	}
 
 	@Override

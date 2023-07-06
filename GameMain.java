@@ -4,7 +4,10 @@ import java.util.Scanner;
 
 public class GameMain {
 	
-	static String job; //직업 구분할 변수
+	static int playerBuff =(int) (Math.random() * 3) + 2;
+	static int BuffTime=1;
+	static int OnlyHealer;
+
 	
 	//파티원 출력
 	public static void printPartyInfo(Creature[] party) {
@@ -26,26 +29,27 @@ public class GameMain {
 	public static void setPlayerParty(Player[] party) {
 		Scanner s = new Scanner(System.in);
 		for (int i = 0; i < party.length; i++) {
-			System.out.print("[" + (i + 1) + "/" + party.length + "] 전사(w), 마법사(m), 도적(t), 힐러(h) 중 선택하세요 : ");
+			System.out.print("[" + (i + 1) + "/" + party.length + "] 전사(w), 마법사(m), 도적(t) 중 선택하세요 : ");
 			String playerSelect = s.nextLine();
 			if (playerSelect.equals("w")) {
 				party[i] = new Warrior("player" + i);
-				job = "w";
 			} else if (playerSelect.equals("m")) {
 				party[i] = new Magician("player" + i);
-				job = "m";
 			} else if (playerSelect.equals("t")) {
 				party[i] = new Thief("player" + i);	
-				job = "t";
 			} else if (playerSelect.equals("h")) {
 				party[i] = new Healer("player" + i);
-				job = "h";
+				OnlyHealer++;
 			} else {
 				System.out.println("w, m, t, h 중 하나를 입력해주세요!");
 				i--;
 			}
 		}
 		s.close();
+		if(OnlyHealer == 3);
+		else {
+			System.out.println("[Buff CollTime] " + playerBuff + " turn");
+		}
 	}
 			
 	
@@ -74,14 +78,42 @@ public class GameMain {
 		}
 		
 		// 스킬 사용 가능 상태 체크
-		 if(attackParty[randomPIdx].mp >= (attackParty[randomPIdx]).skillMp && job == "h") {
-			attackParty[randomPIdx].skill(attackParty[randomPIdx]);
-		}else if (attackParty[randomPIdx].mp >= (attackParty[randomPIdx]).skillMp) {
-			attackParty[randomPIdx].skill(defenseParty[target]);
-		}else {
-			attackParty[randomPIdx].attackType(defenseParty[target]);
+		if(BuffTime%playerBuff  == 0 ) {
+			if(attackParty[randomPIdx] instanceof Healer) {
+				if(attackParty[randomPIdx].mp >= (attackParty[randomPIdx]).skillMp) {
+					for(int i=0; i<attackParty.length; i++) {
+						 attackParty[randomPIdx].skill(attackParty[i]);
+					 }
+					 System.out.println("힐러가 전체 회복을 진행합니다");
+				}else {
+					attackParty[randomPIdx].healType(attackParty[randomPIdx]);
+				}
+			}else {
+				if (attackParty[randomPIdx].mp >= (attackParty[randomPIdx]).skillMp) 
+					attackParty[randomPIdx].buffSkill(defenseParty[target]);
+				else {
+					attackParty[randomPIdx].BuffAttackType(defenseParty[target]);
+				}
+			}
+			BuffTime++;
+			
+		}else{
+			if(attackParty[randomPIdx] instanceof Healer) {
+				if(attackParty[randomPIdx].mp >= (attackParty[randomPIdx]).skillMp) {
+					 for(int i=0; i<attackParty.length; i++) {
+						 attackParty[randomPIdx].skill(attackParty[i]);
+					 }
+					 System.out.println("힐러가 전체 회복을 진행합니다");
+				}else
+					attackParty[randomPIdx].healType(attackParty[randomPIdx]);
+			}else {
+				if (attackParty[randomPIdx].mp >= (attackParty[randomPIdx]).skillMp)
+					attackParty[randomPIdx].skill(defenseParty[target]);
+				else
+					attackParty[randomPIdx].attackType(defenseParty[target]);
+			}
+			BuffTime++;
 		}
-
 		// 몬스터 전체 체력이 0이면 전투 중지(함수 탈출. 1이면 플레이어 승리))
 		if (getPartyTotalHp(defenseParty) == 0)
 			return 1;
@@ -110,7 +142,7 @@ public class GameMain {
 		int playerNum = 3;
 		Player2ndLevel[] players = new Player2ndLevel[playerNum];
 
-		setPlayerParty(players); // 유저로부터 w,m,t를 입력받아 객체를 생성하는 함수
+		setPlayerParty(players); // 유저로부터 w,m,t,h를 입력받아 객체를 생성하는 함수
 		
 		System.out.println("---- [Player Party Info] ----");
 		printPartyInfo(players);
@@ -128,7 +160,6 @@ public class GameMain {
 			System.out.println("---------Round Start---------");
 			
 			result = runOneRound(players, monsters); // 플레이어 1번, 몬스터 1번 공격하는 라운드
-
 			System.out.println("---- [Player Party Info] ----");
 			printPartyInfo(players);
 			System.out.println("---- [Monster Party Info] ----");
@@ -145,7 +176,7 @@ public class GameMain {
 		if (result == 1 || getPartyTotalHp(players) > 0) {
 			System.out.println("플레이어 승리");
 		} else if (result == -1 || getPartyTotalHp(monsters) > 0) {
-			System.out.println("몬스터 승리");
+			System.out.println("몬스터 승리.. 힐러가 필요해...!ㅜㅜ");
 		} else {
 			System.out.println("게임 종료");
 		}
